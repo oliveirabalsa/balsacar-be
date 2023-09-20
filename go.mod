@@ -1,3 +1,3 @@
 module github.com/oliveirabalsa/balsacar-be
 
-go 1.21.1
+go 1.20

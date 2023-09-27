@@ -43,6 +43,7 @@ func main() {
 		api.GET("/advertisements", advertisementHandler.GetAllAdvertisementsHandler)
 		api.PUT("/advertisements/:id", advertisementHandler.UpdateAdvertisementHandler)
 		api.DELETE("/advertisements/:id", advertisementHandler.DeleteAdvertisementHandler)
+		api.POST("/advertisements/upload", advertisementHandler.UploadSheetAdvertisementHandler)
 	}
 
 	router.Run(":8080")

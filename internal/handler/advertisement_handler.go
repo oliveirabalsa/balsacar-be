@@ -1,11 +1,13 @@
 package handler
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"github.com/oliveirabalsa/balsacar-be/internal/entity"
 	"github.com/oliveirabalsa/balsacar-be/internal/service"
-	"net/http"
+  "github.com/xuri/excelize/v2"
 )
 
 type AdvertisementHandler struct {
@@ -96,4 +98,41 @@ func (h *AdvertisementHandler) DeleteAdvertisementHandler(c *gin.Context) {
 	}
 
 	c.Status(http.StatusNoContent)
+}
+
+func (h *AdvertisementHandler) UploadSheetAdvertisementHandler(c *gin.Context) {
+	file, _, err := c.Request.FormFile("file")
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	defer file.Close()
+
+  xlsxFile, err := excelize.OpenReader(file)
+        if err != nil {
+            c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+            return
+        }
+
+        jsonData := make([]map[string]interface{}, 0)
+
+				for _, sheetName := range xlsxFile.GetSheetMap() {
+					rows, err := xlsxFile.GetRows(sheetName)
+					if err != nil {
+						c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+						return
+					}
+
+					for _, row := range rows {
+						rowData := make(map[string]interface{})
+						for _, cellValue := range row {
+							rowData[cellValue] = cellValue
+						}
+						jsonData = append(jsonData, rowData)
+					}
+				}
+
+
+	c.JSON(http.StatusOK, jsonData)
+
 }

@@ -7,7 +7,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/oliveirabalsa/balsacar-be/internal/entity"
 	"github.com/oliveirabalsa/balsacar-be/internal/service"
-  "github.com/xuri/excelize/v2"
+	"github.com/xuri/excelize/v2"
 )
 
 type AdvertisementHandler struct {
@@ -108,31 +108,30 @@ func (h *AdvertisementHandler) UploadSheetAdvertisementHandler(c *gin.Context) {
 	}
 	defer file.Close()
 
-  xlsxFile, err := excelize.OpenReader(file)
-        if err != nil {
-            c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-            return
-        }
+	xlsxFile, err := excelize.OpenReader(file)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
 
-        jsonData := make([]map[string]interface{}, 0)
+	jsonData := []map[string]interface{}{}
 
-				for _, sheetName := range xlsxFile.GetSheetMap() {
-					rows, err := xlsxFile.GetRows(sheetName)
-					if err != nil {
-						c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-						return
-					}
-
-					for _, row := range rows {
-						rowData := make(map[string]interface{})
-						for _, cellValue := range row {
-							rowData[cellValue] = cellValue
-						}
-						jsonData = append(jsonData, rowData)
-					}
-				}
-
-
+	sheetName := xlsxFile.GetSheetName(0)
+	rows, err := xlsxFile.GetRows(sheetName)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	headerRow := rows[0]
+	for i := 1; i < len(rows); i++ {
+		row := rows[i]
+		rowData := make(map[string]interface{})
+		for j, key := range headerRow {
+			if j < len(row) {
+				rowData[key] = row[j]
+			}
+		}
+		jsonData = append(jsonData, rowData)
+	}
 	c.JSON(http.StatusOK, jsonData)
-
 }

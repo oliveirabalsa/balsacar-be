@@ -2,9 +2,12 @@ package handler
 
 import (
 	"net/http"
+	"reflect"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"github.com/lib/pq"
 	"github.com/oliveirabalsa/balsacar-be/internal/entity"
 	"github.com/oliveirabalsa/balsacar-be/internal/service"
 	"github.com/xuri/excelize/v2"
@@ -114,7 +117,7 @@ func (h *AdvertisementHandler) UploadSheetAdvertisementHandler(c *gin.Context) {
 		return
 	}
 
-	jsonData := []map[string]interface{}{}
+	jsonData := []*entity.Advertisement{}
 
 	sheetName := xlsxFile.GetSheetName(0)
 	rows, err := xlsxFile.GetRows(sheetName)
@@ -125,13 +128,34 @@ func (h *AdvertisementHandler) UploadSheetAdvertisementHandler(c *gin.Context) {
 	headerRow := rows[0]
 	for i := 1; i < len(rows); i++ {
 		row := rows[i]
-		rowData := make(map[string]interface{})
+		rowData := make(map[interface{}]interface{})
 		for j, key := range headerRow {
 			if j < len(row) {
 				rowData[key] = row[j]
 			}
 		}
-		jsonData = append(jsonData, rowData)
+		parsed := parseJsonToStruct(rowData)
+		jsonData = append(jsonData, parsed)
 	}
 	c.JSON(http.StatusOK, jsonData)
+}
+func parseJsonToStruct(rowData map[interface{}]interface{}) *entity.Advertisement {
+	var advertisement entity.Advertisement
+
+	for key, value := range rowData {
+		switch key {
+		case "Active":
+			if value == "true" {
+				advertisement.Active = true
+			} else {
+				advertisement.Active = false
+			}
+		case "Images":
+			advertisement.Images = pq.StringArray(strings.Split(value.(string), ","))
+		default:
+
+		}
+	}
+
+	return &advertisement
 }

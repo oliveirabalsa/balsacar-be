@@ -2,7 +2,6 @@ package handler
 
 import (
 	"net/http"
-
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"github.com/oliveirabalsa/balsacar-be/internal/entity"
@@ -114,7 +113,6 @@ func (h *AdvertisementHandler) UploadSheetAdvertisementHandler(c *gin.Context) {
 		return
 	}
 
-	jsonData := []map[string]interface{}{}
 
 	sheetName := xlsxFile.GetSheetName(0)
 	rows, err := xlsxFile.GetRows(sheetName)
@@ -123,15 +121,17 @@ func (h *AdvertisementHandler) UploadSheetAdvertisementHandler(c *gin.Context) {
 		return
 	}
 	headerRow := rows[0]
+	jsonData := []entity.Advertisement{}
 	for i := 1; i < len(rows); i++ {
 		row := rows[i]
-		rowData := make(map[string]interface{})
+		var advertisement entity.Advertisement
 		for j, key := range headerRow {
-			if j < len(row) {
-				rowData[key] = row[j]
-			}
+			value := row[j]
+			advertisement.FromKeyValue(&advertisement, key, value)
 		}
-		jsonData = append(jsonData, rowData)
+		h.advertisementService.CreateAdvertisement(&advertisement)
+		jsonData = append(jsonData, advertisement)
 	}
 	c.JSON(http.StatusOK, jsonData)
 }
+

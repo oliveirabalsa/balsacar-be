@@ -1,6 +1,8 @@
 package entity
 
 import (
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/lib/pq"
@@ -63,4 +65,48 @@ type Advertisement struct {
 
 func (Advertisement) TableName() string {
 	return "advertisements"
+}
+
+
+func (*Advertisement) FromKeyValue(ad *Advertisement, key, value string) {
+	switch key {
+	case "Transmission":
+		ad.Transmission = TransmissionEnum(value)
+	case "Type":
+		ad.Type = CarTypeEnum(value)
+	case "City":
+		ad.City = value
+	case "Price":
+		price, err := strconv.ParseFloat(value, 10)
+		if err == nil {
+			ad.Price = price
+		}
+	case "Make":
+		ad.Make = value
+	case "Model":
+		ad.Model = value
+	case "Year":
+		year, err := strconv.Atoi(value)
+		if err == nil {
+			ad.Year = year
+		}
+	case "Kilometerage":
+		kilometerage, err := strconv.Atoi(value)
+		if err == nil {
+			ad.Kilometerage = kilometerage
+		}
+	case "Fuel":
+		ad.Fuel = FuelTypeEnum(value)
+	case "Description":
+		ad.Description = value
+	case "Contact":
+		ad.Contact = value
+	case "Images":
+		ad.Images = pq.StringArray(strings.Split(value, ","))
+	case "Status":
+		ad.Status = StatusEnum(value)
+	case "Active":
+		parsedValue, _ := strconv.ParseBool(value)
+		ad.Active = parsedValue
+	}
 }

@@ -2,8 +2,10 @@ package handler
 
 import (
 	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"github.com/oliveirabalsa/balsacar-be/internal/dto"
 	"github.com/oliveirabalsa/balsacar-be/internal/entity"
 	"github.com/oliveirabalsa/balsacar-be/internal/service"
 	"github.com/xuri/excelize/v2"
@@ -53,7 +55,14 @@ func (h *AdvertisementHandler) GetAdvertisementByIDHandler(c *gin.Context) {
 }
 
 func (h *AdvertisementHandler) GetAllAdvertisementsHandler(c *gin.Context) {
-	advertisements, err := h.advertisementService.GetAllAdvertisements()
+	filters := dto.AdvertisementParamsDto{}
+
+	if err := c.ShouldBindQuery(&filters); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	advertisements, err := h.advertisementService.GetAllAdvertisements(&filters)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -112,7 +121,6 @@ func (h *AdvertisementHandler) UploadSheetAdvertisementHandler(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-
 
 	sheetName := xlsxFile.GetSheetName(0)
 	rows, err := xlsxFile.GetRows(sheetName)

@@ -2,6 +2,7 @@ package service
 
 import (
 	"github.com/google/uuid"
+	"github.com/oliveirabalsa/balsacar-be/internal/dto"
 	"github.com/oliveirabalsa/balsacar-be/internal/entity"
 	"github.com/oliveirabalsa/balsacar-be/internal/repository"
 )
@@ -29,8 +30,8 @@ func (s *AdvertisementServiceImpl) GetAdvertisementByID(advertisementID uuid.UUI
 	return s.advertisementRepository.FindById(advertisementID)
 }
 
-func (s *AdvertisementServiceImpl) GetAllAdvertisements() ([]*entity.Advertisement, error) {
-	return s.advertisementRepository.FindAll(), nil
+func (s *AdvertisementServiceImpl) GetAllAdvertisements(filters *dto.AdvertisementParamsDto) ([]*entity.Advertisement, error) {
+	return s.advertisementRepository.FindAll(filters), nil
 }
 
 func (s *AdvertisementServiceImpl) DeleteAdvertisement(advertisementID uuid.UUID) error {

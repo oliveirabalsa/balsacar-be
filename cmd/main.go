@@ -32,7 +32,11 @@ func main() {
 	advertisementService := service.NewAdvertisementService(advertisementRepository)
 	advertisementHandler := handler.NewAdvertisementHandler(advertisementService)
 
-	router.InitRouter(server, advertisementHandler)
+	authRepository := repository.NewAuthRepository(db)
+	authService := service.NewAuthService(authRepository, []byte("12345678"))
+	authHandler := handler.NewAuthHandler(authService)
+
+	router.InitRouter(server, advertisementHandler, authHandler)
 
 	server.Run(fmt.Sprintf(":%s", port))
 }

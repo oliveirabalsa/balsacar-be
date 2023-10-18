@@ -52,7 +52,7 @@ func (as *AuthServiceImpl) Login(email, password string) (string, error) {
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := token.Claims.(jwt.MapClaims)
 	claims["userID"] = user.ID
-	claims["exp"] = time.Now().Add(time.Hour * 24).Unix() // Token expiration time
+	claims["exp"] = time.Now().Add(time.Hour * 24).Unix()
 
 	tokenString, err := token.SignedString(as.secretKey)
 	if err != nil {

@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"github.com/google/uuid"
 	"github.com/oliveirabalsa/balsacar-be/internal/entity"
 	"gorm.io/gorm"
 )
@@ -13,7 +14,7 @@ func NewAuthRepository(db *gorm.DB) AuthRepository {
 	return &AuthRepositoryImpl{db: db}
 }
 
-func (ar *AuthRepositoryImpl) FindUserByID(userID uint) (*entity.User, error) {
+func (ar *AuthRepositoryImpl) FindUserByID(userID *uuid.UUID) (*entity.User, error) {
 	var user entity.User
 	if err := ar.db.First(&user, userID).Error; err != nil {
 		return nil, err

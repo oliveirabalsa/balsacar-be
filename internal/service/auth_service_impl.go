@@ -11,7 +11,7 @@ import (
 
 type AuthServiceImpl struct {
 	AuthRepository repository.AuthRepository
-	secretKey      []byte // Your secret key for signing and verifying tokens
+	secretKey      []byte
 }
 
 func NewAuthService(AuthRepository repository.AuthRepository, secretKey []byte) AuthService {
@@ -49,7 +49,6 @@ func (as *AuthServiceImpl) Login(email, password string) (string, error) {
 		return "", err
 	}
 
-	// Create a JWT token
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := token.Claims.(jwt.MapClaims)
 	claims["userID"] = user.ID
@@ -65,7 +64,6 @@ func (as *AuthServiceImpl) Login(email, password string) (string, error) {
 
 func (as *AuthServiceImpl) VerifyToken(tokenString string) (*jwt.Token, error) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-		// Check the signing method and return the secret key
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, jwt.ErrSignatureInvalid
 		}

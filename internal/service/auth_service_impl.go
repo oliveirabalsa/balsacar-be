@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/google/uuid"
 	"github.com/oliveirabalsa/balsacar-be/internal/entity"
 	"github.com/oliveirabalsa/balsacar-be/internal/repository"
 	"golang.org/x/crypto/bcrypt"
@@ -28,6 +29,7 @@ func (as *AuthServiceImpl) Register(email, password string) error {
 	}
 
 	user := &entity.User{
+		ID:       uuid.New().String(),
 		Email:    email,
 		Password: string(hashedPassword),
 	}

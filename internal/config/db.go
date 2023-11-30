@@ -24,6 +24,7 @@ func InitDB() *gorm.DB {
 	}
 
 	db.Table("advertisements").AutoMigrate(&entity.Advertisement{})
+	db.Table("users").AutoMigrate(&entity.User{})
 
 	return db
 }

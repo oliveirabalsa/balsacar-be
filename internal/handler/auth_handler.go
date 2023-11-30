@@ -18,6 +18,11 @@ func NewAuthHandler(authService service.AuthService) *AuthenticationHandler {
 
 func (h *AuthenticationHandler) RegisterHandler(c *gin.Context) {
 	user := &entity.User{}
+	if err := c.ShouldBindJSON(user); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
 	err := h.authService.Register(user.Email, user.Password)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "User registration failed"})

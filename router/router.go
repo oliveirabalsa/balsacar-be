@@ -6,15 +6,18 @@ import (
 )
 
 func InitRouter(router *gin.Engine, advertisementHandler *handler.AdvertisementHandler, authenticationHandler *handler.AuthenticationHandler, authMiddleware gin.HandlerFunc) {
-	api := router.Group("/api", authMiddleware)
+	api := router.Group("/api")
 	{
 		// Advertisement routes
-		api.POST("/advertisements", advertisementHandler.CreateAdvertisementHandler)
-		api.GET("/advertisements/:id", advertisementHandler.GetAdvertisementByIDHandler)
-		api.GET("/advertisements", advertisementHandler.GetAllAdvertisementsHandler)
-		api.PUT("/advertisements/:id", advertisementHandler.UpdateAdvertisementHandler)
-		api.DELETE("/advertisements/:id", advertisementHandler.DeleteAdvertisementHandler)
-		api.POST("/advertisements/upload", advertisementHandler.UploadSheetAdvertisementHandler)
+		advertisements := api.Group("/advertisements", authMiddleware)  // Change router to api here
+		{
+			advertisements.POST("/", advertisementHandler.CreateAdvertisementHandler)
+			advertisements.GET("/:id", advertisementHandler.GetAdvertisementByIDHandler)
+			advertisements.GET("/", advertisementHandler.GetAllAdvertisementsHandler)
+			advertisements.PUT("/:id", advertisementHandler.UpdateAdvertisementHandler)
+			advertisements.DELETE("/:id", advertisementHandler.DeleteAdvertisementHandler)
+			advertisements.POST("/upload", advertisementHandler.UploadSheetAdvertisementHandler)
+		}
 
 		// Authentication routes
 		auth := api.Group("/auth")

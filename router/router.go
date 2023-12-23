@@ -5,8 +5,8 @@ import (
 	"github.com/oliveirabalsa/balsacar-be/internal/handler"
 )
 
-func InitRouter(router *gin.Engine, advertisementHandler *handler.AdvertisementHandler, authenticationHandler *handler.AuthenticationHandler) {
-	api := router.Group("/api")
+func InitRouter(router *gin.Engine, advertisementHandler *handler.AdvertisementHandler, authenticationHandler *handler.AuthenticationHandler, authMiddleware gin.HandlerFunc) {
+	api := router.Group("/api", authMiddleware)
 	{
 		// Advertisement routes
 		api.POST("/advertisements", advertisementHandler.CreateAdvertisementHandler)

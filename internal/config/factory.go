@@ -1,4 +1,4 @@
-package main
+package config
 
 import (
 	"github.com/oliveirabalsa/balsacar-be/internal/handler"
@@ -13,8 +13,8 @@ func AdvertisementHandlerFactory(db *gorm.DB) *handler.AdvertisementHandler {
 	return handler.NewAdvertisementHandler(advertisementService)
 }
 
-func AuthHandlerFactory(db *gorm.DB) *handler.AuthenticationHandler {
+func AuthHandlerFactory(db *gorm.DB, secretKey []byte) *handler.AuthenticationHandler {
 	authRepository := repository.NewAuthRepository(db)
-	authService := service.NewAuthService(authRepository, []byte("12345678"))
+	authService := service.NewAuthService(authRepository, secretKey)
 	return handler.NewAuthHandler(authService)
 }

@@ -33,6 +33,11 @@ func (h *AuthenticationHandler) RegisterHandler(c *gin.Context) {
 
 func (h *AuthenticationHandler) LoginHandler(c *gin.Context) {
 	user := &entity.User{}
+	if err := c.ShouldBindJSON(user); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
 	token, err := h.authService.Login(user.Email, user.Password)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Login failed"})

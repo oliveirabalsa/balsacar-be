@@ -1,7 +1,6 @@
 package dto
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/go-playground/validator/v10"
@@ -20,7 +19,6 @@ func (apd AdvertisementParamsDto) Validate() error {
 	validate := validator.New()
 	validate.RegisterValidation("currentYear", func(fl validator.FieldLevel) bool {
 		currentYear := time.Now().Year()
-		fmt.Println("Field", fl.Field().Int())
 		return int(fl.Field().Int()) <= currentYear
 	})
 

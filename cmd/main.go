@@ -7,9 +7,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"github.com/oliveirabalsa/balsacar-be/internal/config"
-	"github.com/oliveirabalsa/balsacar-be/internal/handler"
-	"github.com/oliveirabalsa/balsacar-be/internal/repository"
-	"github.com/oliveirabalsa/balsacar-be/internal/service"
 	"github.com/oliveirabalsa/balsacar-be/router"
 )
 
@@ -28,13 +25,8 @@ func main() {
 		port = "8080"
 	}
 
-	advertisementRepository := repository.NewAdvertisementRepository(db)
-	advertisementService := service.NewAdvertisementService(advertisementRepository)
-	advertisementHandler := handler.NewAdvertisementHandler(advertisementService)
-
-	authRepository := repository.NewAuthRepository(db)
-	authService := service.NewAuthService(authRepository, []byte("12345678"))
-	authHandler := handler.NewAuthHandler(authService)
+	advertisementHandler := AdvertisementHandlerFactory(db)
+	authHandler := AuthHandlerFactory(db)
 
 	router.InitRouter(server, advertisementHandler, authHandler)
 

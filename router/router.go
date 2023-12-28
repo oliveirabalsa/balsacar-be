@@ -9,7 +9,7 @@ func InitRouter(router *gin.Engine, advertisementHandler *handler.AdvertisementH
 	api := router.Group("/api")
 	{
 		// Advertisement routes
-		advertisements := api.Group("/advertisements", authMiddleware)  // Change router to api here
+		advertisements := api.Group("/advertisements", authMiddleware)
 		{
 			advertisements.POST("/", advertisementHandler.CreateAdvertisementHandler)
 			advertisements.GET("/:id", advertisementHandler.GetAdvertisementByIDHandler)

@@ -49,20 +49,19 @@ func (r *AdvertisementRepositoryImpl) Update(advertisement *entity.Advertisement
 }
 
 func generateFilteredGetQuery(query *gorm.DB, filters *dto.AdvertisementParamsDto) *gorm.DB {
-	if filters.YearFrom != "" {
+
+	switch {
+	case filters.YearFrom != "":
 		query = query.Where("year >= ?", filters.YearFrom)
-	}
-	if filters.YearTo != "" {
+	case filters.YearTo != "":
 		query = query.Where("year <= ?", filters.YearTo)
-	}
-	if filters.Model != "" {
+	case filters.Model != "":
 		query = query.Where("LOWER(model) LIKE LOWER(?)", "%"+filters.Model+"%")
-	}
-	if filters.Type != "" {
+	case filters.Type != "":
 		query = query.Where("LOWER(type) LIKE LOWER(?)", filters.Type)
-	}
-	if filters.City != "" {
+	case filters.City != "":
 		query = query.Where("LOWER(city) LIKE LOWER(?)", "%"+filters.City+"%")
 	}
+
 	return query
 }

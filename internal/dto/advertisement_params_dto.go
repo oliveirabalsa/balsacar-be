@@ -8,11 +8,12 @@ import (
 )
 
 type AdvertisementParamsDto struct {
-	YearFrom string             `form:"year_from" `
-	YearTo   string             `form:"year_to" `
-	Model    string             `form:"model"`
-	City     string             `form:"city"`
-	Type     entity.CarTypeEnum `form:"type"`
+	YearFrom     string                  `form:"year_from" `
+	YearTo       string                  `form:"year_to" `
+	Model        string                  `form:"model"`
+	City         string                  `form:"city"`
+	Type         entity.CarTypeEnum      `form:"type"`
+	Transmission entity.TransmissionEnum `form:"transmission"`
 }
 
 func (apd AdvertisementParamsDto) Validate() error {

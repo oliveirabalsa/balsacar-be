@@ -64,5 +64,9 @@ func generateFilteredGetQuery(query *gorm.DB, filters *dto.AdvertisementParamsDt
 	if filters.City != "" {
 		query = query.Where("LOWER(city) LIKE LOWER(?)", "%"+filters.City+"%")
 	}
+	if filters.Transmission != "" {
+		query = query.Where("LOWER(transmission) LIKE LOWER(?)", "%"+filters.Transmission+"%")
+	}
+
 	return query
 }

@@ -14,6 +14,7 @@ type AdvertisementParamsDto struct {
 	City         string                  `form:"city"`
 	Type         entity.CarTypeEnum      `form:"type"`
 	Transmission entity.TransmissionEnum `form:"transmission"`
+	BestOffer    bool                    `form:"best_offer"`
 }
 
 func (apd AdvertisementParamsDto) Validate() error {

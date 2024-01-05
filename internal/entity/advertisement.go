@@ -59,6 +59,7 @@ type Advertisement struct {
 	Images       pq.StringArray   `gorm:"type:text[]" json:"images"`
 	Status       StatusEnum       `json:"status"`
 	Active       bool             `gorm:"default: false" json:"active"`
+	BestOffer    bool             `gorm:"default: false" json:"best_offer"`
 	CreatedAt    time.Time        `gorm:"created_at" json:"createdAt"`
 	UpdatedAt    time.Time        `gorm:"updated_at" json:"updatedAt"`
 }
@@ -66,7 +67,6 @@ type Advertisement struct {
 func (Advertisement) TableName() string {
 	return "advertisements"
 }
-
 
 func (*Advertisement) FromKeyValue(ad *Advertisement, key, value string) {
 	switch key {
@@ -108,5 +108,8 @@ func (*Advertisement) FromKeyValue(ad *Advertisement, key, value string) {
 	case "Active":
 		parsedValue, _ := strconv.ParseBool(value)
 		ad.Active = parsedValue
+	case "BestOffer":
+		parsedValue, _ := strconv.ParseBool(value)
+		ad.BestOffer = parsedValue
 	}
 }

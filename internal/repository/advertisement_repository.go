@@ -8,7 +8,7 @@ import (
 
 type AdvertisementRepository interface {
 	Save(advertisement *entity.Advertisement) *entity.Advertisement
-	Update(advertisement *entity.Advertisement) *entity.Advertisement
+	Update(advertisementId uuid.UUID, advertisement *entity.Advertisement) (*entity.Advertisement, error)
 	Delete(advertisementId uuid.UUID) error
 	FindById(advertisementId uuid.UUID) (*entity.Advertisement, error)
 	FindAll(filters *dto.AdvertisementParamsDto) []*entity.Advertisement

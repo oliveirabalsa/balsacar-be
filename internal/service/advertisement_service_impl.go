@@ -22,8 +22,12 @@ func (s *AdvertisementServiceImpl) CreateAdvertisement(advertisement *entity.Adv
 	return s.advertisementRepository.Save(advertisement), nil
 }
 
-func (s *AdvertisementServiceImpl) UpdateAdvertisement(advertisement *entity.Advertisement) (*entity.Advertisement, error) {
-	return s.advertisementRepository.Update(advertisement), nil
+func (s *AdvertisementServiceImpl) UpdateAdvertisement(advertisementID uuid.UUID, advertisement *entity.Advertisement) (*entity.Advertisement, error) {
+	updatedAdvertisement, err := s.advertisementRepository.Update(advertisementID, advertisement)
+	if err != nil {
+		return nil, err
+	}
+	return updatedAdvertisement, nil
 }
 
 func (s *AdvertisementServiceImpl) GetAdvertisementByID(advertisementID uuid.UUID) (*entity.Advertisement, error) {

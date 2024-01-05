@@ -77,13 +77,19 @@ func (h *AdvertisementHandler) GetAllAdvertisementsHandler(c *gin.Context) {
 }
 
 func (h *AdvertisementHandler) UpdateAdvertisementHandler(c *gin.Context) {
+	advertisementIDStr := c.Param("id")
+	advertisementID, err := uuid.Parse(advertisementIDStr)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 	var advertisement entity.Advertisement
 	if err := c.ShouldBindJSON(&advertisement); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	updatedAdvertisement, err := h.advertisementService.UpdateAdvertisement(&advertisement)
+	updatedAdvertisement, err := h.advertisementService.UpdateAdvertisement(advertisementID, &advertisement)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

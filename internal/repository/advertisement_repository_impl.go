@@ -43,9 +43,21 @@ func (r *AdvertisementRepositoryImpl) Save(advertisement *entity.Advertisement) 
 	return advertisement
 }
 
-func (r *AdvertisementRepositoryImpl) Update(advertisement *entity.Advertisement) *entity.Advertisement {
-	r.db.Save(&advertisement)
-	return advertisement
+func (r *AdvertisementRepositoryImpl) Update(advertisementId uuid.UUID, updates *entity.Advertisement) (*entity.Advertisement, error) {
+	advertisement := &entity.Advertisement{}
+
+	// Find the advertisement by ID
+	err := r.db.First(&advertisement, "id = ?", advertisementId).Error
+	if err != nil {
+		return nil, err
+	}
+
+	err = r.db.Model(&advertisement).Updates(updates).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return advertisement, nil
 }
 
 func generateFilteredGetQuery(query *gorm.DB, filters *dto.AdvertisementParamsDto) *gorm.DB {
@@ -66,6 +78,9 @@ func generateFilteredGetQuery(query *gorm.DB, filters *dto.AdvertisementParamsDt
 	}
 	if filters.Transmission != "" {
 		query = query.Where("LOWER(transmission) LIKE LOWER(?)", "%"+filters.Transmission+"%")
+	}
+	if filters.BestOffer {
+		query = query.Where("best_offer = ?", true)
 	}
 
 	return query

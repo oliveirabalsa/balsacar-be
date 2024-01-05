@@ -1,3 +1,21 @@
+// @title           Swagger Example API
+// @version         1.0
+// @description     BalsaCar API
+// @termsOfService  http://swagger.io/terms/
+
+// @contact.name   API Support
+// @contact.email  oliveirabalsa2@gmail.com
+
+// @license.name  MTI
+// @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
+
+// @host      localhost:8081
+// @BasePath  /api
+
+// @securityDefinitions.basic  BasicAuth
+
+// @externalDocs.description  OpenAPI
+// @externalDocs.url          https://swagger.io/resources/open-api/
 package main
 
 import (

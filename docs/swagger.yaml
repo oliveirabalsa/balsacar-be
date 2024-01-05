@@ -1,0 +1,21 @@
+basePath: /api
+externalDocs:
+  description: OpenAPI
+  url: https://swagger.io/resources/open-api/
+host: localhost:8081
+info:
+  contact:
+    email: oliveirabalsa2@gmail.com
+    name: API Support
+  description: BalsaCar API
+  license:
+    name: MTI
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Swagger Example API
+  version: "1.0"
+paths: {}
+securityDefinitions:
+  BasicAuth:
+    type: basic
+swagger: "2.0"

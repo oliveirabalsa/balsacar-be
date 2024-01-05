@@ -52,6 +52,10 @@ func (r *AdvertisementRepositoryImpl) Update(advertisementId uuid.UUID, updates 
 		return nil, err
 	}
 
+	if !updates.BestOffer {
+		advertisement.BestOffer = false
+	}
+
 	err = r.db.Model(&advertisement).Updates(updates).Error
 	if err != nil {
 		return nil, err

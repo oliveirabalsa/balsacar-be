@@ -31,6 +31,7 @@ import (
 
 func main() {
 	server := gin.Default()
+
 	err := godotenv.Load()
 
 	if err != nil {
@@ -50,6 +51,7 @@ func main() {
 	authMiddleware := middleware.AuthMiddleware([]byte(secretKey))
 
 	router.InitRouter(server, advertisementHandler, authHandler, authMiddleware)
+	server.Use(middleware.CORSMiddleware())
 
 	server.Run(fmt.Sprintf(":%s", port))
 }

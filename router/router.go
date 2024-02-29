@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/oliveirabalsa/balsacar-be/docs"
 	"github.com/oliveirabalsa/balsacar-be/internal/handler"
+	"github.com/oliveirabalsa/balsacar-be/internal/middleware"
 	swaggerFiles "github.com/swaggo/files"
 	"github.com/swaggo/gin-swagger"
 )
@@ -17,17 +18,18 @@ func InitRouter(router *gin.Engine, advertisementHandler *handler.AdvertisementH
 	docs.SwaggerInfo.BasePath = "/v2"
 	docs.SwaggerInfo.Schemes = []string{"http", "https"}
 
+	router.Use(middleware.CORSMiddleware())
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	api := router.Group("/api")
 	{
-		advertisements := api.Group("/advertisements", authMiddleware)
+		advertisements := api.Group("/advertisements")
 		{
-			advertisements.POST("/", advertisementHandler.CreateAdvertisementHandler)
+			advertisements.GET("/all", advertisementHandler.GetAllAdvertisementsHandler)
 			advertisements.GET("/:id", advertisementHandler.GetAdvertisementByIDHandler)
-			advertisements.GET("/", advertisementHandler.GetAllAdvertisementsHandler)
-			advertisements.PUT("/:id", advertisementHandler.UpdateAdvertisementHandler)
-			advertisements.DELETE("/:id", advertisementHandler.DeleteAdvertisementHandler)
-			advertisements.POST("/upload", advertisementHandler.UploadSheetAdvertisementHandler)
+			advertisements.POST("/", authMiddleware, advertisementHandler.CreateAdvertisementHandler)
+			advertisements.PUT("/:id", authMiddleware, advertisementHandler.UpdateAdvertisementHandler)
+			advertisements.DELETE("/:id", authMiddleware, advertisementHandler.DeleteAdvertisementHandler)
+			advertisements.POST("/upload", authMiddleware, advertisementHandler.UploadSheetAdvertisementHandler)
 		}
 
 		// Authentication routes

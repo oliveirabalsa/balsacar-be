@@ -86,6 +86,9 @@ func generateFilteredGetQuery(query *gorm.DB, filters *dto.AdvertisementParamsDt
 	if filters.BestOffer {
 		query = query.Where("best_offer = ?", true)
 	}
+	if filters.Highlight {
+		query = query.Where("highlight = ?", true)
+	}
 
 	return query
 }

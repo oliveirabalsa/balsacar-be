@@ -60,6 +60,7 @@ type Advertisement struct {
 	Status       StatusEnum       `json:"status"`
 	Active       bool             `gorm:"default: false" json:"active"`
 	BestOffer    bool             `gorm:"default: false" json:"best_offer"`
+	Highlight    bool             `gorm:"default: false" json:"highlight"`
 	CreatedAt    time.Time        `gorm:"created_at" json:"createdAt"`
 	UpdatedAt    time.Time        `gorm:"updated_at" json:"updatedAt"`
 }

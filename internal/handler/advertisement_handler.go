@@ -55,6 +55,8 @@ func (h *AdvertisementHandler) GetAdvertisementByIDHandler(c *gin.Context) {
 }
 
 func (h *AdvertisementHandler) GetAllAdvertisementsHandler(c *gin.Context) {
+	// add pagination soon enough
+
 	filters := dto.AdvertisementParamsDto{}
 
 	if err := c.ShouldBindQuery(&filters); err != nil {

@@ -34,8 +34,8 @@ func (s *AdvertisementServiceImpl) GetAdvertisementByID(advertisementID uuid.UUI
 	return s.advertisementRepository.FindById(advertisementID)
 }
 
-func (s *AdvertisementServiceImpl) GetAllAdvertisements(filters *dto.AdvertisementParamsDto) ([]*entity.Advertisement, error) {
-	return s.advertisementRepository.FindAll(filters), nil
+func (s *AdvertisementServiceImpl) GetAllAdvertisements(filters *dto.AdvertisementParamsDto) ([]*entity.Advertisement, int64, error) {
+	return s.advertisementRepository.FindAll(filters)
 }
 
 func (s *AdvertisementServiceImpl) DeleteAdvertisement(advertisementID uuid.UUID) error {

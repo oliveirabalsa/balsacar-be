@@ -35,7 +35,6 @@ func InitRouter(router *gin.Engine, advertisementHandler *handler.AdvertisementH
 		{
 			auth.POST("/register", authenticationHandler.RegisterHandler)
 			auth.POST("/login", authenticationHandler.LoginHandler)
-			auth.GET("/protected", authenticationHandler.ProtectedHandler)
 		}
 	}
 }

@@ -10,6 +10,6 @@ type AdvertisementService interface {
 	CreateAdvertisement(advertisement *entity.Advertisement) (*entity.Advertisement, error)
 	UpdateAdvertisement(advertisementID uuid.UUID, advertisement *entity.Advertisement) (*entity.Advertisement, error)
 	GetAdvertisementByID(advertisementID uuid.UUID) (*entity.Advertisement, error)
-	GetAllAdvertisements(filters *dto.AdvertisementParamsDto) ([]*entity.Advertisement, error)
+	GetAllAdvertisements(filters *dto.AdvertisementParamsDto) ([]*entity.Advertisement, int64, error)
 	DeleteAdvertisement(advertisementID uuid.UUID) error
 }

@@ -21,15 +21,30 @@ func (r *AdvertisementRepositoryImpl) Delete(advertisementId uuid.UUID) error {
 	return r.db.Delete(&entity.Advertisement{}, advertisementId).Error
 }
 
-func (r *AdvertisementRepositoryImpl) FindAll(filters *dto.AdvertisementParamsDto) []*entity.Advertisement {
+func (r *AdvertisementRepositoryImpl) FindAll(filters *dto.AdvertisementParamsDto) ([]*entity.Advertisement, int64, error) {
 	var advertisements []*entity.Advertisement
-	query := r.db.Model(&entity.Advertisement{})
+	var total int64
 
+	query := r.db.Model(&entity.Advertisement{})
 	generateFilteredGetQuery(query, filters)
 
-	query.Find(&advertisements)
+	if err := query.Count(&total).Error; err != nil {
+		return nil, 0, err
+	}
 
-	return advertisements
+	pageSize, page := int(filters.PageSize), int(filters.Page)
+
+	// Apply pagination if pageSize and page are valid
+	if pageSize > 0 && page > 0 {
+		query = query.Offset((page - 1) * pageSize).Limit(pageSize)
+	}
+
+	// Execute the query and retrieve the records
+	if err := query.Find(&advertisements).Error; err != nil {
+		return nil, 0, err
+	}
+
+	return advertisements, total, nil
 }
 
 func (r *AdvertisementRepositoryImpl) FindById(advertisementId uuid.UUID) (*entity.Advertisement, error) {

@@ -45,7 +45,3 @@ func (h *AuthenticationHandler) LoginHandler(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "User logged in successfully", "token": token})
 }
-
-func (h *AuthenticationHandler) ProtectedHandler(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{"message": "Protected route handler"})
-}

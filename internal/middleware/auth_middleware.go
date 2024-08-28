@@ -15,7 +15,6 @@ func AuthMiddleware(secretKey []byte) gin.HandlerFunc {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid or expired token"})
 			c.Abort()
 			return
-			return
 		}
 
 		tokenParts := strings.Split(authHeader, " ")

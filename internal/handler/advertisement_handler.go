@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -55,14 +56,21 @@ func (h *AdvertisementHandler) GetAdvertisementByIDHandler(c *gin.Context) {
 }
 
 func (h *AdvertisementHandler) GetAllAdvertisementsHandler(c *gin.Context) {
-	filters := dto.AdvertisementParamsDto{}
+	fmt.Println("GetAllAdvertisementsHandler")
+	filters := dto.AdvertisementParamsDto{
+		Page:     1,
+		PageSize: 10,
+	}
+
+	fmt.Println("filters", filters)
 
 	if err := c.ShouldBindQuery(&filters); err != nil {
+		fmt.Println("err filters", err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	advertisements, err := h.advertisementService.GetAllAdvertisements(&filters)
+	advertisements, total, err := h.advertisementService.GetAllAdvertisements(&filters)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -73,7 +81,15 @@ func (h *AdvertisementHandler) GetAllAdvertisementsHandler(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, advertisements)
+	response := dto.Paginated{
+		Data:       advertisements,
+		Page:       filters.Page,
+		PageSize:   filters.PageSize,
+		Total:      total,
+		TotalPages: (total + filters.PageSize - 1) / filters.PageSize,
+	}
+
+	c.JSON(http.StatusOK, response)
 }
 
 func (h *AdvertisementHandler) UpdateAdvertisementHandler(c *gin.Context) {

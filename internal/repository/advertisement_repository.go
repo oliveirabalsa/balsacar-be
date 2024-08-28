@@ -11,5 +11,5 @@ type AdvertisementRepository interface {
 	Update(advertisementId uuid.UUID, advertisement *entity.Advertisement) (*entity.Advertisement, error)
 	Delete(advertisementId uuid.UUID) error
 	FindById(advertisementId uuid.UUID) (*entity.Advertisement, error)
-	FindAll(filters *dto.AdvertisementParamsDto) []*entity.Advertisement
+	FindAll(filters *dto.AdvertisementParamsDto) ([]*entity.Advertisement, int64, error)
 }
